@@ -610,7 +610,12 @@ img, video{ max-width:100%; height:auto; display:block; } /* height:auto is
    the whole tile (photo + caption) is the hover target. */
 .carousel .tile figcaption{ transition: color .18s ease; }
 @media (hover:hover){
-  .carousel .tile-link:hover figcaption{ color: var(--orange-light); }
+  /* Eliza 2026-10-12: the title lightens only when the TEXT is hovered, not the photo. The caption
+     is sized to its text (desktop) and takes the pointer itself. */
+  .carousel .tile-link figcaption:hover{ color: var(--orange-light); }
+}
+@media (min-width:1153px){
+  .carousel .tile figcaption{ pointer-events:auto; width:fit-content; min-width:0; max-width:100%; }
 }
 
 /* pre-footer carousel: scroll-hijacked (vertical scroll -> horizontal, 1:1) */
@@ -1823,8 +1828,8 @@ body.page-custom .carousel{ background: var(--orange); }
      moved to stack above cove2. productStampFloat() in main.js mirrors
      these same 46/847 constants for its own natural-position math (the
      float/pin-to-viewport behavior itself is unchanged). */
-  position:absolute; left: calc(46 * var(--u)); top: calc(847 * var(--u) + var(--s1));
-  width: calc(126 * var(--u)); margin:0; opacity:.55; pointer-events:none;
+  position:absolute; left: calc(358 * var(--u)); top: calc(847 * var(--u) + var(--s1));   /* Eliza 2026-10-12: starts beside the description (left of the copy), then floats */
+  width: calc(125 * var(--u)); margin:0; opacity:.55; pointer-events:none;
   z-index: 5; /* above photos/copy, below the nav bar (z-index 50) -- Eliza 2026-10-03 */
 }
 .product-stamp-soft img{ width:100%; height:auto; display:block; }
@@ -3515,4 +3520,25 @@ body:not(.page-product) .site-footer{ position:relative; z-index:1; }
   }
   .catalogue-band{ font-weight:200 !important; }
   .product-cta-inquire, .newsletter .nl-status, #heroNav.is-collapsed-nav a{ font-weight:200; }
+}
+
+
+/* Pulsing vertical bar on Custom / Catalogue / Showroom (Eliza 2026-10-12), same idea as the homepage's
+   scroll cue: an orange hairline under the nav that pulses, fades out as soon as you scroll down and
+   returns when you are back at the top (js/main.js pageCue). Desktop only, like the homepage one. */
+.page-cue{ display:none; }
+@media (min-width:1153px){
+  .page-cue{
+    display:block; position:absolute; left:50%; top: calc(196 * var(--u)); z-index:4;
+    width:1px; height: calc(70 * var(--u)); background: var(--orange); pointer-events:none;
+    transform-origin: top center; transition: opacity .3s ease;
+    animation: pageCuePulse 2.5s ease-out .6s infinite both;
+  }
+  .page-cue.is-hidden{ opacity:0 !important; animation-play-state: paused; }
+}
+@keyframes pageCuePulse{
+  0%    { opacity:.7; transform: scaleY(1);  box-shadow: none; }
+  14.4% { opacity:1;  transform: scaleY(.5); box-shadow: 0 0 calc(8 * var(--u)) rgba(244,163,58,.9); }
+  36%   { opacity:.7; transform: scaleY(1);  box-shadow: none; }
+  100%  { opacity:.7; transform: scaleY(1);  box-shadow: none; }
 }
