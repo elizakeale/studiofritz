@@ -1319,7 +1319,7 @@
       var avail = window.innerHeight - top - 24;
       /* 857u = the bottom of the gallery arrows (840 + 17): the squeeze now makes the ARROWS fit above the fold,
          not just divider 1 (Eliza 2026-10-12: people don't realise they can go left/right). */
-      var s1 = Math.max(-261 * u, Math.min(0, avail - 857 * u));
+      var s1 = Math.max(-300 * u, Math.min(0, avail - 857 * u));
       var s2 = desc.offsetHeight + 114 * u - 396 * u;
       section.style.setProperty('--s1', s1.toFixed(2) + 'px');
       section.style.setProperty('--s2', s2.toFixed(2) + 'px');
@@ -1452,6 +1452,12 @@
         stamp.style.position = 'absolute';
         stamp.style.top = restTopInSection + 'px';
         stamp.style.left = ''; // back to the stylesheet's section-relative left
+      } else if (naturalTopViewport > minTop) {
+        /* Eliza 2026-10-12: "the stamp is going up and down a bit when I start scrolling." While it is still riding
+           at its natural spot it was position:fixed with a JS-written top, which trails the browser's own scrolling
+           by a frame. Until it reaches the pin line it is simply left in the page (CSS position), so it moves with the
+           scroll natively; JS only takes over (fixed, constant top) once it has to hold still. */
+        stamp.style.position = ''; stamp.style.top = ''; stamp.style.left = '';
       } else {
         stamp.style.position = 'fixed';
         stamp.style.top = floatTop + 'px';

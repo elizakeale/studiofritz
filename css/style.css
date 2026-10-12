@@ -1763,7 +1763,7 @@ body.page-custom .carousel{ background: var(--orange); }
    out at 443u, safely clear -- a full 591u box would top out at 232u,
    which does reach the title). */
 .product-hero.is-hero, .product-thumb-cove3.is-hero{ height: calc(545 * var(--u) + var(--s1)); }
-.product-thumb-5.is-hero, .product-thumb-cove2.is-hero{ height: calc(380 * var(--u)); }
+.product-thumb-5.is-hero, .product-thumb-cove2.is-hero{ height: min(calc(380 * var(--u)), calc(483 * var(--u) + var(--s1))); }   /* never taller than the gap under the title once the window squeezes the gallery (s1 < 0) */
 
 /* Safety max-width caps -- not a design size, just a guard so an
    unusually wide photo (checked across all 7 product pages) can't run
@@ -3529,16 +3529,17 @@ body:not(.page-product) .site-footer{ position:relative; z-index:1; }
 .page-cue{ display:none; }
 @media (min-width:1153px){
   .page-cue{
-    display:block; position:absolute; left:50%; top: calc(196 * var(--u)); z-index:4;
-    width:1px; height: calc(70 * var(--u)); background: var(--orange); pointer-events:none;
+    display:block; position:fixed; left:50%; bottom: 32px; z-index:4;   /* same size + low placement as the homepage cue (88u, ~40px above the fold) */
+    width:1px; height: calc(88 * var(--u)); background: var(--orange); pointer-events:none;
+    box-shadow: 0 0 0 .5px rgba(255,255,255,.55);   /* keeps it readable where it crosses a photo */
     transform-origin: top center; transition: opacity .3s ease;
     animation: pageCuePulse 2.5s ease-out .6s infinite both;
   }
   .page-cue.is-hidden{ opacity:0 !important; animation-play-state: paused; }
 }
 @keyframes pageCuePulse{
-  0%    { opacity:.7; transform: scaleY(1);  box-shadow: none; }
-  14.4% { opacity:1;  transform: scaleY(.5); box-shadow: 0 0 calc(8 * var(--u)) rgba(244,163,58,.9); }
-  36%   { opacity:.7; transform: scaleY(1);  box-shadow: none; }
-  100%  { opacity:.7; transform: scaleY(1);  box-shadow: none; }
+  0%    { opacity:.7; transform: scaleY(1);  box-shadow: 0 0 0 .5px rgba(255,255,255,.55); }
+  14.4% { opacity:1;  transform: scaleY(.5); box-shadow: 0 0 0 .5px rgba(255,255,255,.55), 0 0 calc(8 * var(--u)) rgba(244,163,58,.9); }
+  36%   { opacity:.7; transform: scaleY(1);  box-shadow: 0 0 0 .5px rgba(255,255,255,.55); }
+  100%  { opacity:.7; transform: scaleY(1);  box-shadow: 0 0 0 .5px rgba(255,255,255,.55); }
 }
