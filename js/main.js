@@ -443,12 +443,39 @@
     // scroll-position-driven and finite; it now drifts like the others
     // whenever the scroll isn't actively driving it, so it needs the loop.
     var originalHTML = track.innerHTML;
+    var copies = 2;
     track.innerHTML = originalHTML + originalHTML;
+    var perSet = track.children.length / 2;
 
     // One set's width. Everything positional below works in this space and
     // wraps, so drift, drag and the scroll-hijack can hand off to each
     // other at any point without a jump.
-    function loopWidth() { return track.scrollWidth / 2; }
+    /* One set's width = distance from the first tile to the first tile of the
+       second copy. (It used to be scrollWidth / 2, which is only right while
+       the track holds exactly two clean copies: at tablet widths, where the tiles
+       are small, scrollWidth overshoots the real content, the loop wrapped far past
+       the last tile, and the right side of the strip ran out to bare orange.) */
+    function loopWidth() {
+      var a = track.children[0], b = track.children[perSet];
+      if (!a || !b) return track.scrollWidth / 2;
+      return b.offsetLeft - a.offsetLeft;
+    }
+    /* Enough copies that the strip always reaches past the right edge:
+       needs (copies - 1) * loop >= the track's visible width. */
+    function ensureCopies() {
+      var w = loopWidth();
+      if (!(w > 0)) return;
+      var need = Math.max(2, Math.ceil(track.clientWidth / w) + 2);
+      if (need <= copies) return;
+      var left = track.scrollLeft, html = '';
+      for (var i = 0; i < need - copies; i++) html += originalHTML;
+      track.insertAdjacentHTML('beforeend', html);
+      copies = need;
+      track.scrollLeft = left;
+    }
+    ensureCopies();
+    window.addEventListener('resize', ensureCopies);
+    window.addEventListener('load', ensureCopies);
     function setLeft(l) {
       var w = loopWidth();
       if (w > 0) { l = l % w; if (l < 0) l += w; }
