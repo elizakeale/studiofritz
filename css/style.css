@@ -615,7 +615,11 @@ img, video{ max-width:100%; height:auto; display:block; } /* height:auto is
   .carousel .tile-link figcaption:hover{ color: var(--orange-light); }
 }
 @media (min-width:1153px){
-  .carousel .tile figcaption{ pointer-events:auto; width:fit-content; min-width:0; max-width:100%; }
+  /* width:0 (not fit-content): a caption sized to its text became part of the tile's own width, so when it
+     was a few px wider than a narrow portrait photo (Union Square on Contact) the tile grew and an orange
+     strip opened beside the photo. A zero-width box adds nothing to the tile; the text overflows it and
+     still takes the hover, so only the words lighten. */
+  .carousel .tile figcaption{ pointer-events:auto; width:0; min-width:0; max-width:none; overflow:visible; text-overflow:clip; }
 }
 
 /* pre-footer carousel: scroll-hijacked (vertical scroll -> horizontal, 1:1) */
@@ -3544,4 +3548,13 @@ body:not(.page-product) .site-footer{ position:relative; z-index:1; }
   14.4% { opacity:1;  transform: scaleY(.5); box-shadow: 0 0 0 .5px rgba(255,255,255,.55), 0 0 calc(8 * var(--u)) rgba(244,163,58,.9); }
   36%   { opacity:.7; transform: scaleY(1);  box-shadow: 0 0 0 .5px rgba(255,255,255,.55); }
   100%  { opacity:.7; transform: scaleY(1);  box-shadow: 0 0 0 .5px rgba(255,255,255,.55); }
+}
+
+/* Eliza 2026-10-13: hovering the logomark (nav and footer) shows the inverted artwork. Nav: the orange/white
+   crossfade driven by --hdr-bg-a is simply mirrored. Footer: it is the white mark, so it swaps to the orange
+   asset. Hover-capable pointers only (a tap on a phone would leave it stuck inverted). */
+@media (hover:hover){
+  .wm-mark:hover .wm-mark-white{ opacity: calc(1 - var(--hdr-bg-a, 0)); }
+  .wm-mark:hover .wm-mark-orange{ opacity: var(--hdr-bg-a, 0); }
+  .footer-wm-mark:hover img{ content: url("../images/logos/logomark/logomark-orange.svg"); }
 }
