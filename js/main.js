@@ -1044,6 +1044,142 @@
       });
     });
   });
+
+  /* ---------------- email pop-up (Figma "EMAIL POP-UP" 693:129 / mobile 693:256) -------------
+     Opens once a visitor has spent 30 seconds on the site (visible time, summed across pages in
+     this visit). It is the same sign-up as the footer's: same email rule (required + a real
+     address), same wording for the two errors, same endpoint and type, so the sheet gets it as a
+     newsletter row. "Not interested", X, Esc or a click outside close it and it stays away for 30
+     days; a successful sign-up keeps it away for good. Never opens over the homepage intro, the
+     Inquire pop-up or the open mobile menu, and never on the thank-you page. */
+  (function emailPopup() {
+    var T_KEY = 'sf-nl-ms', DISMISS_KEY = 'sf-nl-dismissed', DONE_KEY = 'sf-nl-done';
+    var LIMIT = 30000, DAYS = 30;
+    function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
+    function lsSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) {} }
+    function ssGet(k) { try { return window.sessionStorage.getItem(k); } catch (e) { return null; } }
+    function ssSet(k, v) { try { window.sessionStorage.setItem(k, v); } catch (e) {} }
+    if (/^\/thankyou/.test(location.pathname) || /404/.test(document.title)) return;
+    if (lsGet(DONE_KEY)) return;
+    var dismissed = parseInt(lsGet(DISMISS_KEY), 10);
+    if (dismissed && Date.now() - dismissed < DAYS * 864e5) return;
+
+    var total = parseInt(ssGet(T_KEY), 10) || 0;
+    var last = Date.now(), shown = false, timer = null, opener = null;
+
+    function blocked() {
+      var b = document.body.classList;
+      return b.contains('intro-active') || b.contains('inquire-modal-open') || b.contains('menu-open');
+    }
+
+    function build() {
+      var root = document.createElement('div');
+      root.className = 'nlp';
+      root.hidden = true;
+      root.innerHTML =
+        '<div class="nlp-backdrop" data-nlp-close></div>' +
+        '<div class="nlp-panel" role="dialog" aria-modal="true" aria-labelledby="nlpLede" tabindex="-1">' +
+          '<img class="nlp-stamp" src="/images/logos/logomark/logomark-orange.svg" alt="" width="83" height="83">' +
+          '<button class="nlp-close" type="button" data-nlp-close aria-label="Close">' +
+            '<svg viewBox="0 0 31 29" fill="none" aria-hidden="true"><path d="M1 1L30 28M30 1L1 28" stroke="currentColor" stroke-width="1"/></svg>' +
+          '</button>' +
+          '<form class="nlp-form" data-newsletter novalidate>' +
+            '<p class="nlp-lede" id="nlpLede">Be the first to know about unique pieces by joining our e-mail list. We are always experimenting with new materials and look forward to sharing them with you.</p>' +
+            '<div class="nlp-field">' +
+              '<label for="nlpEmail">Your Email*</label>' +
+              '<input id="nlpEmail" name="email" type="email" autocomplete="email" inputmode="email" required>' +
+            '</div>' +
+            '<button class="nlp-submit" type="submit"><span>Submit</span><span><img src="/images/logos/arrows/arrow-white.svg" alt=""></span></button>' +
+            '<p class="nlp-status" role="status" hidden></p>' +
+          '</form>' +
+          '<button class="nlp-skip" type="button" data-nlp-close>Not interested.</button>' +
+        '</div>';
+      document.body.appendChild(root);
+      return root;
+    }
+
+    var root, panel, form, input, status;
+
+    function setStatus(msg, isError) {
+      status.hidden = !msg; status.textContent = msg || '';
+      status.setAttribute('role', isError ? 'alert' : 'status');
+    }
+
+    function close(remember) {
+      if (!root || root.hidden) return;
+      root.hidden = true;
+      document.body.classList.remove('nlp-open');
+      document.removeEventListener('keydown', onKey, true);
+      if (remember) lsSet(DISMISS_KEY, String(Date.now()));
+      if (opener && opener.focus) { try { opener.focus(); } catch (e) {} }
+    }
+
+    function onKey(e) {
+      if (e.key === 'Escape') { e.stopPropagation(); close(true); return; }
+      if (e.key !== 'Tab') return;
+      var f = Array.prototype.filter.call(panel.querySelectorAll('button, input:not(.sf-hp)'), function (el) { return !el.disabled && el.offsetParent !== null; });
+      if (!f.length) return;
+      var first = f[0], lastEl = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); lastEl.focus(); }
+      else if (!e.shiftKey && document.activeElement === lastEl) { e.preventDefault(); first.focus(); }
+    }
+
+    function show() {
+      if (shown) return;
+      shown = true;
+      clearInterval(timer);
+      root = build(); panel = root.querySelector('.nlp-panel'); form = root.querySelector('form');
+      input = root.querySelector('#nlpEmail'); status = root.querySelector('.nlp-status');
+      addHoneypot(form);
+      opener = document.activeElement;
+      Array.prototype.forEach.call(root.querySelectorAll('[data-nlp-close]'), function (el) {
+        el.addEventListener('click', function () { close(true); });
+      });
+      // same rule as every other form: a field error line under the input, cleared as soon as it is fixed
+      input.addEventListener('input', function () {
+        syncEmailValidity(input);
+        setStatus('');
+        if (!form.classList.contains('is-validated')) return;
+        if (input.validity.valid) clearFieldError(input); else showFieldError(input);
+      });
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (form.classList.contains('is-sending')) return;
+        form.classList.add('is-validated');
+        syncEmailValidity(input);
+        if (!input.validity.valid) { showFieldError(input); input.focus(); return; }
+        clearFieldError(input);
+        form.classList.add('is-sending');
+        setStatus('');
+        postForm(FORMS_ENDPOINT, collect(form)).then(function () {
+          lsSet(DONE_KEY, '1');
+          form.classList.remove('is-sending');
+          root.classList.add('is-done');
+          setStatus('Success. You are on the list.');
+          setTimeout(function () { close(false); }, 2600);
+        }).catch(function (err) {
+          if (window.console) console.error('Pop-up sign-up failed:', err);
+          form.classList.remove('is-sending');
+          setStatus('Not successful. Please try again.', true);
+        });
+      });
+      root.hidden = false;
+      document.body.classList.add('nlp-open');
+      document.addEventListener('keydown', onKey, true);
+      panel.focus({ preventScroll: true });
+    }
+
+    function tick() {
+      var now = Date.now();
+      if (document.hidden) { last = now; return; }
+      total += Math.min(now - last, 2000);   // a sleeping tab / throttled timer never counts as time on the site
+      last = now;
+      ssSet(T_KEY, String(total));
+      if (total >= LIMIT && !blocked()) show();
+    }
+    timer = setInterval(tick, 1000);
+    document.addEventListener('visibilitychange', function () { last = Date.now(); });
+  })();
 })();
 
 /* ------------- white supporting pages: the bar floats + turns orange -----

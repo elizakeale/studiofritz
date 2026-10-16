@@ -3558,3 +3558,107 @@ body:not(.page-product) .site-footer{ position:relative; z-index:1; }
   .wm-mark:hover .wm-mark-orange{ opacity: var(--hdr-bg-a, 0); }
   .footer-wm-mark:hover img{ content: url("../images/logos/logomark/logomark-orange.svg"); }
 }
+
+/* "Read the Feature Story" (Custom, World feature) and "As Seen In" (About): both are the site's orange bar button,
+   sitting in the flow of the column they close, at that column's width. */
+.custom-feature-copy .custom-cta-feature{
+  position:static; display:flex; width: calc(402 * var(--u)); max-width:100%;
+  margin: calc(72 * var(--u)) 0 0; text-align:left; text-decoration:none;
+}
+.about-col .about-cta-seen{
+  position:static; display:flex; width:100%; box-sizing:border-box;
+  margin: calc(52 * var(--u)) 0 0;
+}
+@media (max-width:1152px){
+  .custom-feature-copy .custom-cta-feature{ width:auto; margin: calc(40 * var(--mu)) 0 0; }
+  .about-col .about-cta-seen{ margin: calc(40 * var(--mu)) 0 0; }
+}
+
+/* ---------------------------------------------------------------------------------------------
+   Email pop-up (Figma "EMAIL POP-UP" 693:129, 748 x 449 on a 1440 frame; mobile 693:256, 370 x 448
+   on 402). Offsets below are Figma's, less the 2px / 1px outline. Built by js/main.js after 30s.
+   --------------------------------------------------------------------------------------------- */
+.nlp{ position:fixed; inset:0; z-index:310; display:flex; align-items:center; justify-content:center; }
+.nlp[hidden]{ display:none; }
+body.nlp-open{ overflow:hidden; }
+.nlp-backdrop{ position:absolute; inset:0; background: rgba(28,17,35,.4); }
+.nlp-panel{
+  position:relative; box-sizing:border-box; width: calc(748 * var(--u)); height: calc(449 * var(--u));
+  background: var(--white); border: 2px solid var(--orange); color: var(--ink); outline:none;
+  font-family: var(--font-body); font-weight:200; letter-spacing:.05em; text-transform:uppercase;
+}
+.nlp-stamp{ position:absolute; left:50%; top: calc(38 * var(--u)); width: calc(83 * var(--u)); height: calc(83 * var(--u)); transform: translateX(-50%); display:block; }
+.nlp-close{
+  position:absolute; top: calc(18 * var(--u)); right: calc(36 * var(--u));
+  width: calc(31 * var(--u)); height: calc(29 * var(--u)); padding:0; border:0; background:none;
+  color: var(--orange); cursor:pointer; display:block;
+}
+.nlp-close svg{ width:100%; height:100%; display:block; }
+.nlp-form{ position:static; margin:0; }
+.nlp-lede{
+  position:absolute; left: calc(29 * var(--u)); top: calc(145 * var(--u)); width: calc(679 * var(--u)); margin:0;
+  font-size: calc(16 * var(--u)); line-height: calc(27 * var(--u)); text-align:justify;
+}
+.nlp-field{ position:static; }
+.nlp-field label{
+  position:absolute; left: calc(29 * var(--u)); top: calc(245 * var(--u)); margin:0;
+  font-size: calc(16 * var(--u)); line-height: calc(27 * var(--u));
+}
+.nlp-field input[type="email"]{
+  position:absolute; left: calc(29 * var(--u)); top: calc(285 * var(--u)); box-sizing:border-box;
+  width: calc(679 * var(--u)); height: calc(50 * var(--u)); margin:0; padding: 0 calc(12 * var(--u));
+  background: var(--white); color: var(--ink); border: 1px solid var(--orange); border-radius:0;
+  font: inherit; font-size: calc(16 * var(--u)); letter-spacing:.05em; text-transform:none; outline:none; -webkit-appearance:none; appearance:none;
+}
+.nlp-field input[type="email"]:focus{ border-width:1px; box-shadow: inset 0 0 0 1px var(--orange); }
+.nlp-field .sf-field-error{
+  position:absolute; left: calc(29 * var(--u)); top: calc(339 * var(--u)); margin:0;
+  font-size: calc(12 * var(--u)); line-height:1.4; color: var(--ink);
+}
+.nlp-submit{
+  position:absolute; left:50%; top: calc(359 * var(--u)); transform: translateX(-50%);
+  box-sizing:border-box; width: calc(402 * var(--u)); height: calc(33 * var(--u));
+  display:flex; align-items:center; justify-content:space-between; padding: 0 calc(12 * var(--u)) 0 calc(10 * var(--u));
+  background: var(--orange); color: var(--white); border: 1px solid var(--orange); border-radius:0; cursor:pointer;
+  font: inherit; font-weight:200; font-size: calc(14 * var(--u)); letter-spacing:.05em; text-transform:uppercase;
+  transition: background .18s ease, color .18s ease;
+}
+.nlp-submit:hover{ background: var(--white); color: var(--orange); }
+.nlp-submit:hover img{ content: url("../images/logos/arrows/arrow-orange.svg"); }
+.nlp-submit img{ width: calc(10 * var(--u)); height: calc(10 * var(--u)); display:block; }
+.nlp-form.is-sending .nlp-submit{ opacity:.6; pointer-events:none; }
+.nlp-status{
+  position:absolute; left:0; right:0; top: calc(397 * var(--u)); margin:0; text-align:center;
+  font-size: calc(12 * var(--u)); line-height:1.4; color: var(--ink);
+}
+.nlp-status[hidden]{ display:none; }
+.nlp-skip{
+  position:absolute; left:50%; top: calc(407 * var(--u)); transform: translateX(-50%);
+  width: calc(141 * var(--u)); height: calc(40 * var(--u)); padding:0; margin:0; border:0; background:none; cursor:pointer;
+  font: inherit; font-weight:200; font-size: calc(12 * var(--u)); line-height: calc(27 * var(--u)); letter-spacing:.05em; text-transform:uppercase;
+  color: var(--ink); text-align:center; text-decoration:underline; text-underline-position:from-font;
+}
+.nlp-skip:hover{ color: var(--orange); }
+/* once signed up: the form's own line is the message */
+.nlp.is-done .nlp-lede, .nlp.is-done .nlp-field, .nlp.is-done .nlp-submit, .nlp.is-done .nlp-skip{ visibility:hidden; }
+.nlp.is-done .nlp-status{ top: calc(215 * var(--u)); font-size: calc(16 * var(--u)); }
+.nlp-form .sf-hp{ position:absolute; left:-9999px; width:1px; height:1px; opacity:0; }
+
+@media (max-width:1152px){
+  .nlp-panel{ width: calc(100% - 32 * var(--mu)); max-width: calc(370 * var(--mu)); height: calc(448 * var(--mu)); border-width:1px; }
+  .nlp-stamp{ top: calc(19 * var(--mu)); width: calc(49 * var(--mu)); height: calc(49 * var(--mu)); }
+  .nlp-close{ top: calc(29 * var(--mu)); right: calc(21 * var(--mu)); width: calc(30 * var(--mu)); height: calc(29 * var(--mu)); }
+  .nlp-lede{ left: calc(21 * var(--mu)); top: calc(97 * var(--mu)); width: calc(100% - 42 * var(--mu)); font-size: calc(14 * var(--mu)); line-height: calc(25 * var(--mu)); letter-spacing:.5px; }
+  .nlp-field label{ left: calc(21 * var(--mu)); top: calc(252 * var(--mu)); font-size: calc(16 * var(--mu)); line-height: calc(27 * var(--mu)); }
+  .nlp-field input[type="email"]{
+    left: calc(21 * var(--mu)); top: calc(292 * var(--mu)); width: calc(100% - 42 * var(--mu)); height: calc(35 * var(--mu));
+    border-color:#ffe7be; padding: 0 calc(10 * var(--mu)); font-size: 16px;   /* 16px floor: iOS zooms the page on focus below it */
+  }
+  .nlp-field input[type="email"]:focus{ border-color: var(--orange); box-shadow:none; }
+  .nlp-field .sf-field-error{ left: calc(21 * var(--mu)); top: calc(331 * var(--mu)); font-size: calc(12 * var(--mu)); }
+  .nlp-submit{ top: calc(356 * var(--mu)); width: calc(100% - 42 * var(--mu)); height: calc(33 * var(--mu)); font-size: calc(14 * var(--mu)); padding: 0 calc(13 * var(--mu)) 0 calc(9 * var(--mu)); }
+  .nlp-submit img{ width: calc(10 * var(--mu)); height: calc(10 * var(--mu)); }
+  .nlp-status{ top: calc(392 * var(--mu)); font-size: calc(12 * var(--mu)); }
+  .nlp-skip{ top: calc(396 * var(--mu)); width: calc(142 * var(--mu)); height: calc(40 * var(--mu)); font-size: calc(12 * var(--mu)); line-height: calc(27 * var(--mu)); }
+  .nlp.is-done .nlp-status{ top: calc(190 * var(--mu)); font-size: calc(16 * var(--mu)); }
+}
