@@ -1061,8 +1061,7 @@
     function ssSet(k, v) { try { window.sessionStorage.setItem(k, v); } catch (e) {} }
     if (/^\/thankyou/.test(location.pathname) || /404/.test(document.title)) return;
     if (lsGet(DONE_KEY)) return;
-    var dismissed = parseInt(lsGet(DISMISS_KEY), 10);
-    if (dismissed && Date.now() - dismissed < DAYS * 864e5) return;
+    if (ssGet(DISMISS_KEY)) return;   /* dismissed this visit; returns after 30s in the next session */
 
     var total = parseInt(ssGet(T_KEY), 10) || 0;
     var last = Date.now(), shown = false, timer = null, opener = null;
@@ -1110,7 +1109,7 @@
       root.hidden = true;
       document.body.classList.remove('nlp-open');
       document.removeEventListener('keydown', onKey, true);
-      if (remember) lsSet(DISMISS_KEY, String(Date.now()));
+      if (remember) ssSet(DISMISS_KEY, '1');
       if (opener && opener.focus) { try { opener.focus(); } catch (e) {} }
     }
 
