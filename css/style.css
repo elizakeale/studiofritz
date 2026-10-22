@@ -3662,3 +3662,13 @@ body.nlp-open{ overflow:hidden; }
   .nlp-skip{ top: calc(396 * var(--mu)); width: calc(142 * var(--mu)); height: calc(40 * var(--mu)); font-size: calc(12 * var(--mu)); line-height: calc(27 * var(--mu)); }
   .nlp.is-done .nlp-status{ top: calc(190 * var(--mu)); font-size: calc(16 * var(--mu)); }
 }
+
+/* Optical left alignment for stacked nav links: the font gives round capitals
+   (C, S, T) a built-in left side bearing that A does not have, so "Contact"
+   looked indented under "About". Pull each link left by its first letter's
+   bearing (measured from Estedad Light: C .065em, S .048em, T .041em). */
+.mm-col a[href="/custom"], .mm-col a[href="/catalogue"], .mm-col a[href="/contact"],
+.footer-col a[href="/custom"], .footer-col a[href="/catalogue"], .footer-col a[href="/contact"],
+.hero-links a[href="/contact"]{ margin-left:-.065em; }
+.mm-col a[href="/showroom"], .footer-col a[href="/showroom"]{ margin-left:-.048em; }
+.mm-col a[href="/trade"], .footer-col a[href="/trade"]{ margin-left:-.041em; }
