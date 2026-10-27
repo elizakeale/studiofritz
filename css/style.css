@@ -2508,7 +2508,7 @@ body.page-custom .carousel{ background: var(--orange); }
      desktop holds the copy, so it cannot drift. */
   .about-col-b1 > p:nth-child(1){ order:2; }
   .about-col-b1 > p:nth-child(2){ order:1; }
-  .about-col-b1 > p:nth-child(3){ order:3; }
+  .about-col-b1 > .about-cta{ order:3; }
 
   .about-fig{ position:static; width:auto; }
   /* 338:58 and 338:80 are full-bleed at 402 wide; 338:88 is 427 wide on a
@@ -3565,13 +3565,13 @@ body:not(.page-product) .site-footer{ position:relative; z-index:1; }
   position:static; display:flex; width: calc(402 * var(--u)); max-width:100%;
   margin: calc(72 * var(--u)) 0 0; text-align:left; text-decoration:none;
 }
-.about-col .about-cta-seen{
+.about-col .about-cta{
   position:static; display:flex; width:100%; box-sizing:border-box;
-  margin: calc(52 * var(--u)) 0 0;
+  margin: calc(40 * var(--u)) 0 0;
 }
 @media (max-width:1152px){
   .custom-feature-copy .custom-cta-feature{ width:auto; margin: calc(40 * var(--mu)) 0 0; }
-  .about-col .about-cta-seen{ margin: calc(40 * var(--mu)) 0 0; }
+  .about-col .about-cta{ margin: calc(40 * var(--mu)) 0 0; }
 }
 
 /* ---------------------------------------------------------------------------------------------
