@@ -2502,13 +2502,7 @@ body.page-custom .carousel{ background: var(--orange); }
      The second column follows the first with the same paragraph rhythm
      rather than a section break. */
   .about-col-b1, .about-col-b2{ margin-top: 1.7em; }
-  /* 338:61 runs the maker copy as one block and puts the family-history line
-     straight after "raised in a family of architects", ahead of "Lucas
-     introduces". Same six paragraphs as desktop, reordered by order: only
-     desktop holds the copy, so it cannot drift. */
-  .about-col-b1 > p:nth-child(1){ order:2; }
-  .about-col-b1 > p:nth-child(2){ order:1; }
-  .about-col-b1 > .about-cta{ order:3; }
+  /* Mobile runs the same copy in the same order as desktop (no reordering). */
 
   .about-fig{ position:static; width:auto; }
   /* 338:58 and 338:80 are full-bleed at 402 wide; 338:88 is 427 wide on a
