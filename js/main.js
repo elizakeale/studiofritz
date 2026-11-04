@@ -1083,7 +1083,7 @@
             '<svg viewBox="0 0 31 29" fill="none" aria-hidden="true"><path d="M1 1L30 28M30 1L1 28" stroke="currentColor" stroke-width="1"/></svg>' +
           '</button>' +
           '<form class="nlp-form" data-newsletter novalidate>' +
-            '<p class="nlp-lede" id="nlpLede">Be the first to know about unique pieces by joining our e-mail list. We are always experimenting with new materials and look forward to sharing them with you.</p>' +
+            '<p class="nlp-lede" id="nlpLede">Be the first to know about unique pieces by joining our e-mail list. We are constantly experimenting with new materials and form and look forward to sharing them with you.</p>' +
             '<div class="nlp-field">' +
               '<label for="nlpEmail">Your Email*</label>' +
               '<input id="nlpEmail" name="email" type="email" autocomplete="email" inputmode="email" required>' +
