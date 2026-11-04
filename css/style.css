@@ -3666,3 +3666,16 @@ body.nlp-open{ overflow:hidden; }
 .hero-links a[href="/contact"]{ margin-left:-.065em; }
 .mm-col a[href="/showroom"], .footer-col a[href="/showroom"]{ margin-left:-.048em; }
 .mm-col a[href="/trade"], .footer-col a[href="/trade"]{ margin-left:-.041em; }
+
+
+/* Catalogue photo pairs (tablet/mobile only; desktop shows one photo per item).
+   - Every pair is a taller, clearer photo on the left and a shorter one on the right.
+   - Point Grey: swapped so the single tall stool leads and the two-stool shot sits right.
+   - Westlake: tighter, wider crop on the left photo so the table fills the frame. */
+@media (max-width:1152px){
+  .catalogue-item[href="/catalogue/pointgreystool"] .catalogue-photo{ aspect-ratio: 0.72 !important; }
+  .catalogue-item[href="/catalogue/pointgreystool"] .catalogue-photo img{ content: url("../images/product/point-grey-stool-2.webp"); }
+  .catalogue-item[href="/catalogue/pointgreystool"] .catalogue-photo-sm img{ content: url("../images/home/point-grey-stools.webp"); }
+  .catalogue-item[href="/catalogue/westlaketable"] .catalogue-photo{ aspect-ratio: 1.15 !important; }
+  .catalogue-item[href="/catalogue/westlaketable"] .catalogue-photo img{ object-position: center 30%; }
+}

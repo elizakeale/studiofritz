@@ -1416,9 +1416,18 @@
       var progress = span > 0 ? (window.innerHeight - r.top) / span : 0.5;
       progress = clamp(progress, 0, 1);
       var offset = ((progress - 0.5) * 2 * AMPLITUDE); // -AMPLITUDE..AMPLITUDE
+      // Padding rule: a column that sits under the Download button may drift up,
+      // but never closer to it than one button-height. offsetTop ignores transforms,
+      // so this is the column's resting position.
+      var btn = document.querySelector('.catalogue-download');
       cols.forEach(function (col) {
         var dir = col.getAttribute('data-parallax-dir') === '-1' ? -1 : 1;
-        col.style.transform = 'translateY(' + (offset * dir).toFixed(1) + 'px)';
+        var t = offset * dir;
+        if (btn) {
+          var under = col.offsetLeft < btn.offsetLeft + btn.offsetWidth && col.offsetLeft + col.offsetWidth > btn.offsetLeft;
+          if (under) t = Math.max(t, btn.offsetTop + btn.offsetHeight * 2 - col.offsetTop);
+        }
+        col.style.transform = 'translateY(' + t.toFixed(1) + 'px)';
       });
     }
 
